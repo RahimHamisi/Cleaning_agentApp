@@ -1,5 +1,6 @@
 import 'package:clean_agent_app/screen/homepage.dart';
 import 'package:clean_agent_app/screen/login_screen.dart';
+import 'package:clean_agent_app/screen/register_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/home":(context) => const Homepage(),
-        "/" :(context) => const LoginScreen()
+        "/" :(context) => const LoginScreen(),
+        "/register" :(context) => const RegisterPage()
       },
     );
   }
