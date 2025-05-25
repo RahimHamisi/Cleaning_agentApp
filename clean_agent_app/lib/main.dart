@@ -1,6 +1,9 @@
+import 'package:clean_agent_app/screen/company_registered.dart';
 import 'package:clean_agent_app/screen/homepage.dart';
 import 'package:clean_agent_app/screen/login_screen.dart';
 import 'package:clean_agent_app/screen/register_screen.dart';
+import 'package:clean_agent_app/screen/setting_page.dart';
+import 'package:clean_agent_app/screen/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,9 +20,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: "/",
       routes: {
-        "/home":(context) => const Homepage(),
-        "/" :(context) => const LoginScreen(),
-        "/register" :(context) => const RegisterPage()
+        "/ser":(context) => const Homepage(),
+        "/login" :(context) => const LoginScreen(),
+        "/register" :(context) => const RegisterPage(),
+        "/k" : (context) => const CompanyRegistered(),
+        "/h": (context) => const UserDashboard(),
+        "/": (context) => const SettingsPage(),
+
       },
     );
   }
