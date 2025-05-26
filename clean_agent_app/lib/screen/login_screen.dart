@@ -1,7 +1,8 @@
-import 'package:clean_agent_app/screen/homepage.dart';
 import 'package:clean_agent_app/screen/register_screen.dart';
+import 'package:clean_agent_app/screen/user_dashboard.dart';
 import 'package:flutter/material.dart';
-
+import 'package:clean_agent_app/screen/homepage.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,32 +17,47 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   bool isLoggingIn = false;
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoggingIn = true;
       });
 
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          isLoggingIn = false;
-        });
-        _showSuccessPopup();
+      await Future.delayed(const Duration(seconds: 2));
+
+      setState(() {
+        isLoggingIn = false;
       });
+
+      _showSuccessPopup();
+    } else {
+      _showErrorPopup("Invalid login credentials. Please try again.");
     }
   }
 
   void _showSuccessPopup() {
-    showDialog(
+    QuickAlert.show(
       context: context,
-      barrierDismissible: false, // Prevents user from dismissing manually
-      builder: (context) {
-        Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pop(context);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Homepage()));
-        });
+      type: QuickAlertType.success,
+      text: "Login Successful!",
+      autoCloseDuration: const Duration(seconds: 2),
+      showConfirmBtn: true,
+      onConfirmBtnTap: () {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const UserDashboard()));
+      },
+    );
+  }
 
-        return _buildSuccessDialog("Login Successful!");
+  void _showErrorPopup(String message) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      text: message,
+      title: "Login Error",
+      confirmBtnText: "Try Again",
+      confirmBtnColor: Colors.redAccent,
+      onConfirmBtnTap: () {
+        Navigator.pop(context);
       },
     );
   }
@@ -51,102 +67,52 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          /// Background Image
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/background_image.jpg",
-              fit: BoxFit.cover,
-            ),
-          ),
+          Positioned.fill(child: Image.asset("assets/images/background_image.jpg",fit: BoxFit.cover,)),
+          Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.85,
+                constraints: const BoxConstraints(maxWidth: 400),
+                padding: const EdgeInsets.all(24),
+                decoration: _buildCardDecoration(),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const Text("LOGIN", style: _titleTextStyle),
+                      const SizedBox(height: 30),
 
-          /// Overlay for better readability
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.3)),
-          ),
+                      _buildTextField("Username", usernameController, "Enter your username"),
+                      _buildTextField("Password", passwordController, "Enter your password", obscureText: true),
 
-          /// Login Form
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      padding: const EdgeInsets.all(24),
-                      decoration: _buildCardDecoration(),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            const Text("LOGIN", style: _titleTextStyle),
-                            const SizedBox(height: 30),
+                      const SizedBox(height: 30),
 
-                            _buildTextField("Username", usernameController, "Enter your username"),
-                            _buildTextField("Password", passwordController, "Enter your password", obscureText: true),
-
-                            const SizedBox(height: 30),
-
-                            /// **Login Button**
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _handleLogin,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFFF6B4A),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: isLoggingIn
-                                    ? const CircularProgressIndicator(color: Colors.white)
-                                    : const Text("Login", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            _buildRegisterRedirect(),
-                          ],
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _handleLogin,
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6B4A), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                          child: isLoggingIn ? const CircularProgressIndicator(color: Colors.white) : const Text("Login", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+
+                      _buildRegisterRedirect(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ],
-      ),
+      )
     );
   }
 
-  /// **Success Dialog with Animation**
-  Widget _buildSuccessDialog(String message) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      backgroundColor: Colors.white,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width *0.8,
-        height: 200,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 50),
-            const SizedBox(height: 10),
-            Text(message, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  /// **Reusable UI Components**
   BoxDecoration _buildCardDecoration() => BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6)]);
-  static const TextStyle _titleTextStyle = TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFFFF6B4A));
 
-  /// **Reusable TextField with Validation**
+  static const TextStyle _titleTextStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFFF6B4A));
+
   Widget _buildTextField(String label, TextEditingController controller, String hint, {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -161,18 +127,19 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  /// **Register Redirect**
   Widget _buildRegisterRedirect() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Don't have an account?", style: TextStyle(fontSize: 16, color: Colors.grey)),
         GestureDetector(
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage())),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+          },
           child: const Text(" Register", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFFFF6B4A))),
         ),
       ],
     );
   }
+
 }

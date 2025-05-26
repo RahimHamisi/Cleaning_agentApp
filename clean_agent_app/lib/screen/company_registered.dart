@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widget/sidebar.dart';
+
 class CompanyRegistered extends StatefulWidget {
   const CompanyRegistered({super.key});
 
@@ -162,42 +164,6 @@ class _CompanyRegisteredState extends State<CompanyRegistered> {
     );
   }
 }
-
-// Sidebar with navigation items
-class SideBar extends StatelessWidget {
-  const SideBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: [
-          const SizedBox(height: 40),
-          CircleAvatar(radius: 40, backgroundColor: Colors.grey[300], child: const Icon(Icons.person, size: 40, color: Colors.black54)),
-          const SizedBox(height: 20),
-          _buildDrawerItem(Icons.dashboard, "Dashboard", () {}),
-          _buildDrawerItem(Icons.cleaning_services, "Book Service", () {}),
-          _buildDrawerItem(Icons.person_outline, "Cleaning Agents", () {}),
-          _buildDrawerItem(Icons.settings, "Settings", () {}),
-          _buildDrawerItem(Icons.info_outline, "About", () {}),
-          _buildDrawerItem(Icons.contact_page, "Contact Us", () {}),
-          const Spacer(),
-          _buildDrawerItem(Icons.logout, "Logout", () {}),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black87),
-      title: Text(title, style: const TextStyle(fontSize: 16)),
-      onTap: onTap,
-    );
-  }
-}
-
 
 
 

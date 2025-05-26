@@ -1,3 +1,10 @@
+import 'package:clean_agent_app/screen/bookinghistory.dart';
+import 'package:clean_agent_app/screen/bookservice.dart';
+import 'package:clean_agent_app/screen/company_registered.dart';
+import 'package:clean_agent_app/screen/help_and_support_page.dart';
+import 'package:clean_agent_app/screen/homepage.dart';
+import 'package:clean_agent_app/screen/setting_page.dart';
+import 'package:clean_agent_app/screen/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
 class SideBar extends StatelessWidget {
@@ -30,14 +37,30 @@ class SideBar extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Sidebar Items
-            _buildDrawerItem(Icons.dashboard, "Dashboard", Colors.blueAccent, () {}),
-            _buildDrawerItem(Icons.cleaning_services, "Book Service", Colors.green, () {}),
-            _buildDrawerItem(Icons.person_outline, "Cleaning Agents", Colors.deepOrange, () {}),
-            _buildDrawerItem(Icons.history, "Booking History", Colors.purple, () {}), // NEW!
-            _buildDrawerItem(Icons.settings, "Settings", Colors.grey, () {}),
-            _buildDrawerItem(Icons.support_agent, "Help & Support", Colors.blueGrey, () {}), // NEW!
-            _buildDrawerItem(Icons.info_outline, "About", Colors.teal, () {}),
-            _buildDrawerItem(Icons.contact_page, "Contact Us", Colors.indigo, () {}),
+            _buildDrawerItem(Icons.dashboard, "Dashboard", Colors.blueAccent, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const UserDashboard() ));
+            }),
+            _buildDrawerItem(Icons.cleaning_services, "Book Service", Colors.green, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const BookingServicePage() ));
+            }),
+            _buildDrawerItem(Icons.person_outline, "Cleaning Agents", Colors.deepOrange, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const CompanyRegistered() ));
+            }),
+            _buildDrawerItem(Icons.history, "Booking History", Colors.purple, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const BookingHistoryPage() ));
+            }), // NEW!
+            _buildDrawerItem(Icons.settings, "Settings", Colors.grey, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const SettingsPage() ));
+            }),
+            _buildDrawerItem(Icons.support_agent, "Help & Support", Colors.blueGrey, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const HelpSupportPage() ));
+            }), // NEW!
+            _buildDrawerItem(Icons.info_outline, "About", Colors.teal, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const Homepage() ));
+            }),
+            _buildDrawerItem(Icons.contact_page, "Contact Us", Colors.indigo, () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const SettingsPage() ));
+            }),
 
             const SizedBox(height: 24),
 

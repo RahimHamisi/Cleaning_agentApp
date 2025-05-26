@@ -8,7 +8,6 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Custom AppBar
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
         child: Container(
@@ -47,22 +46,17 @@ class Homepage extends StatelessWidget {
       drawer: const SideBar(),
       body: Stack(
         children: [
-          /// **Background Image (Full-screen fit)**
           Positioned.fill(
             child: Image.asset(
               "assets/images/background_image.jpg",
               fit: BoxFit.cover, // Ensures full screen fit
             ),
           ),
-
-          /// **Overlay for Text Readability**
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.3),
             ),
           ),
-
-          /// **Main Content (Centered & Responsive)**
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -70,7 +64,6 @@ class Homepage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  /// **Heading**
                   Text(
                     "BOOK CLEANING SERVICES",
                     textAlign: TextAlign.center,
@@ -83,8 +76,6 @@ class Homepage extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 20),
-
-                  /// **Description Text**
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
@@ -99,8 +90,6 @@ class Homepage extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 30),
-
-                  /// **Get Started Button**
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(

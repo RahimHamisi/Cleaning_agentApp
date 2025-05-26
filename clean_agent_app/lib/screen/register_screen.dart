@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clean_agent_app/screen/login_screen.dart';
+import 'package:quickalert/quickalert.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,24 +15,33 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  bool isRegistering = false;
 
-  void _handleRegistration() {
+  void _handleRegistration() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isRegistering = true;
+      });
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      setState(() {
+        isRegistering = false;
+      });
+
       _showSuccessPopup();
     }
   }
 
   void _showSuccessPopup() {
-    showDialog(
+    QuickAlert.show(
       context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pop(context);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-        });
-
-        return _buildSuccessDialog("Registration Successful!");
+      type: QuickAlertType.success,
+      text: "Registration Successful!",
+      autoCloseDuration: const Duration(seconds: 2),
+      showConfirmBtn: true,
+      onConfirmBtnTap: () {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
       },
     );
   }
@@ -41,75 +51,54 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       body: Stack(
         children: [
-          /// Background Image
-          Positioned.fill(child: _buildBackgroundImage()),
+          Positioned.fill(child: Image.asset("assets/images/background_image.jpg",fit: BoxFit.cover,)),
+          Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.85,
+                constraints: const BoxConstraints(maxWidth: 400),
+                padding: const EdgeInsets.all(24),
+                decoration: _buildCardDecoration(),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const Text("REGISTER", style: _titleTextStyle),
+                      const SizedBox(height: 30),
 
-          /// Registration Form
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      padding: const EdgeInsets.all(24),
-                      decoration: _buildCardDecoration(),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            const Text("REGISTRATION", style: _titleTextStyle),
-                            const SizedBox(height: 30),
+                      _buildTextField("Username", usernameController, "Enter your username"),
+                      _buildTextField("Email", emailController, "Enter your email", emailValidation: true),
+                      _buildTextField("Password", passwordController, "Enter your password", obscureText: true),
+                      _buildTextField("Confirm Password", confirmPasswordController, "Confirm your password", obscureText: true, passwordMatchValidation: true),
 
-                            _buildTextField("Username", usernameController, "Enter your username"),
-                            _buildTextField("Email", emailController, "Enter your email", emailValidation: true),
-                            _buildTextField("Password", passwordController, "Enter your password", obscureText: true),
-                            _buildTextField("Confirm Password", confirmPasswordController, "Confirm your password", obscureText: true, passwordMatchValidation: true),
+                      const SizedBox(height: 24),
 
-                            const SizedBox(height: 24),
-                            _buildRegisterButton(),
-                            _buildLoginRedirect(),
-                          ],
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _handleRegistration,
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6B4A), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                          child: isRegistering ? const CircularProgressIndicator(color: Colors.white) : const Text("Register", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+
+                      _buildLoginRedirect(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ],
-      ),
+      )
     );
   }
 
-  /// **Success Dialog**
-  Widget _buildSuccessDialog(String message) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      backgroundColor: Colors.white,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width *0.8,
-        height: 200,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 50),
-            const SizedBox(height: 10),
-            Text(message, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  /// **Reusable UI Components**
-  Widget _buildBackgroundImage() => Image.asset("assets/images/background_image.jpg", fit: BoxFit.cover);
   BoxDecoration _buildCardDecoration() => BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6)]);
+
   static const TextStyle _titleTextStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFFF6B4A));
 
-  /// **Reusable TextField**
   Widget _buildTextField(String label, TextEditingController controller, String hint, {bool obscureText = false, bool emailValidation = false, bool passwordMatchValidation = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -127,19 +116,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  /// **Register Button**
-  Widget _buildRegisterButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _handleRegistration,
-        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6B4A), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-        child: const Text("Register", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-      ),
-    );
-  }
-
-  /// **Login Redirect**
   Widget _buildLoginRedirect() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
