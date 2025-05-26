@@ -1,5 +1,6 @@
-import 'package:clean_agent_app/widget/sidebar.dart';
 import 'package:flutter/material.dart';
+import 'package:clean_agent_app/screen/login_screen.dart';
+import 'package:clean_agent_app/widget/sidebar.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -9,7 +10,7 @@ class Homepage extends StatelessWidget {
     return Scaffold(
       // Custom AppBar
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -17,7 +18,7 @@ class Homepage extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -28,14 +29,14 @@ class Homepage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Builder(
-                      builder: (context) {
-                        return IconButton(
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          icon: Icon(Icons.menu, color: Colors.black87, size: 28),
-                        );
-                      }
+                    builder: (context) {
+                      return IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        icon: const Icon(Icons.menu, color: Colors.black87, size: 28),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -46,83 +47,78 @@ class Homepage extends StatelessWidget {
       drawer: const SideBar(),
       body: Stack(
         children: [
-          // Background Image
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/background_image.jpg"),
-                fit: BoxFit.cover,
-              ),
+          /// **Background Image (Full-screen fit)**
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/background_image.jpg",
+              fit: BoxFit.cover, // Ensures full screen fit
             ),
           ),
 
-          // Content Overlay
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.black.withOpacity(0.3), // Dark overlay for better text readability
+          /// **Overlay for Text Readability**
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.3),
+            ),
           ),
 
-          // Main Content
-          Positioned(
-            left: 80,
-            top: 150,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
+          /// **Main Content (Centered & Responsive)**
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Main Heading
+                  /// **Heading**
                   Text(
                     "BOOK CLEANING SERVICES",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 48,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
+                      color: Colors.white,
                       height: 1.2,
                     ),
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 20),
 
-                  // Description Text
-                  Container(
-                    width: 500,
+                  /// **Description Text**
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      "A clean and simple interface to organize your favourite websites. Open a new browser tab and see your sites load instantly. Try it for free.",
+                      "A clean and simple interface to organize your bookings. Try it now!",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                        height: 1.6,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.white.withOpacity(0.9),
+                        height: 1.5,
                       ),
                     ),
                   ),
 
-                  SizedBox(height: 40),
+                  const SizedBox(height: 30),
 
-                  // Get Started Button
+                  /// **Get Started Button**
                   ElevatedButton(
                     onPressed: () {
-                      // Handle get started action
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFF6B4A),
+                      backgroundColor: const Color(0xFFFF6B4A),
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      elevation: 2,
                     ),
-                    child: Text(
-                      "Get started",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
