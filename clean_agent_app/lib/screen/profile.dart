@@ -10,7 +10,14 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile", style: TextStyle(color: Colors.white)),
+        centerTitle: true,
         backgroundColor: const Color(0xFFFF6B4A),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/home'); // Ensure '/home' is defined in routes
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

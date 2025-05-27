@@ -28,7 +28,6 @@ class IntroductionScreenPage extends StatelessWidget {
             title: "Get Started",
             body: "A clean and simple way to organize your bookings. Try it now!",
             image: buildImage("assets/images/background_image.jpg"),
-            footer: _buildStartButton(context),
             decoration: pageDecoration(),
           ),
         ],
@@ -36,7 +35,7 @@ class IntroductionScreenPage extends StatelessWidget {
         showSkipButton: true,
         skip: _buildTextButton("Skip"),
         next: const Icon(Icons.arrow_forward, color: Colors.deepOrange),
-        done: _buildTextButton("Done"),
+        done: _buildTextButton("Start Now"),
         dotsDecorator: const DotsDecorator(
           size: Size(10.0, 10.0),
           activeSize: Size(22.0, 10.0),
@@ -50,20 +49,7 @@ class IntroductionScreenPage extends StatelessWidget {
   }
 
   /// Helper method to load images dynamically
-  Widget buildImage(String path) => Center(child: Image.asset(path, width: 300, fit: BoxFit.contain));
-
-  /// Start Button with refined UI
-  Widget _buildStartButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => _goToHome(context),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        backgroundColor: Colors.deepOrange,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      child: const Text("Start Now", style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
-    );
-  }
+  Widget buildImage(String path) => Center(child: Image.asset(path, width: 500, fit: BoxFit.contain));
 
   /// Styled Text Button for Skip and Done
   Widget _buildTextButton(String text) {

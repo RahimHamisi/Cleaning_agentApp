@@ -26,24 +26,11 @@ class Homepage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Builder(
-                    builder: (context) {
-                      return IconButton(
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        icon: const Icon(Icons.menu, color: Colors.black87, size: 28),
-                      );
-                    },
-                  ),
-                ],
               ),
             ),
           ),
         ),
       ),
-      drawer: const SideBar(),
       body: Stack(
         children: [
           Positioned.fill(

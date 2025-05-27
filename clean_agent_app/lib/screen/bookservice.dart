@@ -1,3 +1,5 @@
+import 'package:clean_agent_app/screen/homepage.dart';
+import 'package:clean_agent_app/screen/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
 class BookingServicePage extends StatefulWidget {
@@ -20,24 +22,61 @@ class _BookingServicePageState extends State<BookingServicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Book a Service", style: TextStyle(color: Colors.white)),
+        title: const Text("Book a Service", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        centerTitle: true,
         backgroundColor: const Color(0xFFFF6B4A),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const UserDashboard())),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildFormFields(), // All form fields
+        child: Center(
+          child: Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shadowColor: Colors.black26,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle("Select Service Type"),
+                      _buildDropdown(["Deep Cleaning", "Carpet Cleaning", "General Cleaning"], selectedService, (value) {
+                        setState(() {
+                          selectedService = value!;
+                        });
+                      }),
+                      const SizedBox(height: 16),
 
-                const SizedBox(height: 24), // Proper spacing
+                      _buildDateTimePicker(),
+                      const SizedBox(height: 16),
 
-                _buildBookButton(), // Button appears right after the form fields
-              ],
+                      _buildSectionTitle("Select Cleaning Agent"),
+                      _buildDropdown(["Agent A", "Agent B", "Agent C"], selectedAgent, (value) {
+                        setState(() {
+                          selectedAgent = value!;
+                        });
+                      }),
+                      const SizedBox(height: 16),
+
+                      _buildSectionTitle("Enter Your Details"),
+                      _buildTextField("Address", addressController),
+                      const SizedBox(height: 12),
+                      _buildTextField("Contact Number", contactController),
+                      const SizedBox(height: 24),
+
+                      _buildBookButton(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -45,131 +84,103 @@ class _BookingServicePageState extends State<BookingServicePage> {
     );
   }
 
-  Widget _buildFormFields() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDropdown("Service Type", ["Deep Cleaning", "Carpet Cleaning", "General Cleaning"], selectedService, (value) {
-          setState(() {
-            selectedService = value!;
-          });
-        }),
-        const SizedBox(height: 12),
-        _buildDatePicker(),
-        const SizedBox(height: 12),
-        _buildTimePicker(),
-        const SizedBox(height: 12),
-        _buildDropdown("Select Agent", ["Agent A", "Agent B", "Agent C"], selectedAgent, (value) {
-          setState(() {
-            selectedAgent = value!;
-          });
-        }),
-        const SizedBox(height: 12),
-        _buildTextField("Address", addressController),
-        const SizedBox(height: 12),
-        _buildTextField("Contact Number", contactController),
-      ],
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String selectedItem, Function(String?) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        DropdownButtonFormField<String>(
-          value: selectedItem,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
-          items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
-          onChanged: onChanged,
-        ),
-      ],
+  Widget _buildDropdown(List<String> items, String selectedItem, Function(String?) onChanged) {
+    return DropdownButtonFormField<String>(
+      value: selectedItem,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+      onChanged: onChanged,
     );
   }
 
-  Widget _buildDatePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Select Date", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        ElevatedButton.icon(
-          onPressed: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime(2050),
-            );
-            if (pickedDate != null) {
-              setState(() {
-                selectedDate = pickedDate;
-              });
-            }
-          },
-          icon: const Icon(Icons.calendar_today),
-          label: Text(selectedDate == null ? "Choose Date" : "${selectedDate!.toLocal()}".split(' ')[0]),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
+  Widget _buildDateTimePicker() {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shadowColor: Colors.black26,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Pick Date & Time", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Divider(thickness: 1, color: Colors.grey),
+            const SizedBox(height: 12),
+
+            _buildStyledButton(
+              label: selectedDate == null ? "Choose Date" : "${selectedDate!.toLocal()}".split(' ')[0],
+              icon: Icons.calendar_today,
+              onPressed: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2050),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    selectedDate = pickedDate;
+                  });
+                }
+              },
+            ),
+
+            const SizedBox(height: 12),
+
+            _buildStyledButton(
+              label: selectedTime == null ? "Choose Time" : selectedTime!.format(context),
+              icon: Icons.access_time,
+              onPressed: () async {
+                TimeOfDay? pickedTime = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                );
+                if (pickedTime != null) {
+                  setState(() {
+                    selectedTime = pickedTime;
+                  });
+                }
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  Widget _buildTimePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Select Time", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        ElevatedButton.icon(
-          onPressed: () async {
-            TimeOfDay? pickedTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay.now(),
-            );
-            if (pickedTime != null) {
-              setState(() {
-                selectedTime = pickedTime;
-              });
-            }
-          },
-          icon: const Icon(Icons.access_time),
-          label: Text(selectedTime == null ? "Choose Time" : selectedTime!.format(context)),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
-      ],
+  Widget _buildStyledButton({required String label, required IconData icon, required VoidCallback onPressed}) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, color: Colors.white),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.orange,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+      ),
     );
   }
 
   Widget _buildTextField(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
-          validator: (value) => value == null || value.isEmpty ? "This field is required" : null,
-        ),
-      ],
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      validator: (value) => value == null || value.isEmpty ? "This field is required" : null,
     );
   }
 

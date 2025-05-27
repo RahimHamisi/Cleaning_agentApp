@@ -9,9 +9,6 @@ class UserDashboard extends StatefulWidget {
 }
 
 class _UserDashboardState extends State<UserDashboard> {
-  int currentPage = 1;
-  int totalPages = 1;
-
   final List<CleaningAgent> recommendedAgents = [
     CleaningAgent(name: "Agent 1", rating: 4.8, location: "Dar es Salaam"),
     CleaningAgent(name: "Agent 2", rating: 4.5, location: "Arusha"),
@@ -19,9 +16,13 @@ class _UserDashboardState extends State<UserDashboard> {
     CleaningAgent(name: "Agent 1", rating: 4.8, location: "Dar es Salaam"),
     CleaningAgent(name: "Agent 2", rating: 4.5, location: "Arusha"),
     CleaningAgent(name: "Agent 3", rating: 4.7, location: "Dodoma"),
-    CleaningAgent(name: "Agent 1", rating: 4.8, location: "Dar es Salaam"),
-    CleaningAgent(name: "Agent 2", rating: 4.5, location: "Arusha"),
-    CleaningAgent(name: "Agent 3", rating: 4.7, location: "Dodoma"),
+  ];
+
+  final List<CategoryItem> cleaningCategories = [
+    CategoryItem(name: "Home Cleaning", icon: Icons.home),
+    CategoryItem(name: "Office Cleaning", icon: Icons.business),
+    CategoryItem(name: "Car Wash", icon: Icons.directions_car),
+    CategoryItem(name: "Laundry", icon: Icons.local_laundry_service),
   ];
 
   @override
@@ -31,80 +32,63 @@ class _UserDashboardState extends State<UserDashboard> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF6B4A),
         title: const Text("User Dashboard", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(Icons.menu, color: Colors.black87, size: 28),
-            );
-          },
-        ),
+        centerTitle: true,
       ),
       drawer: const SideBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSummaryCards(),
+              const SizedBox(height: 30),
 
-                // User Avatar & Welcome Message
-                Row(
-                  children: [
-                    CircleAvatar(radius: 40, backgroundColor: Colors.grey[300], child: const Icon(Icons.person, size: 40, color: Colors.black54)),
-                    const SizedBox(width: 12),
-                    const Text("Welcome Back!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
-                ),
+              _buildSectionTitle("Cleaning Categories"),
+              const SizedBox(height: 12),
+              _buildCategoryList(),
 
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildSummaryCard("Total Bookings", "12", Icons.book_online),
-                    _buildSummaryCard("Pending Requests", "3", Icons.hourglass_empty),
-                    _buildSummaryCard("Completed Services", "9", Icons.check_circle_outline),
-                  ],
-                ),
-                const SizedBox(height: 50),
-                const Text("Recommended Cleaning Agents", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: recommendedAgents.map((agent) => _buildAgentCard(agent)).toList(),
-                  ),
-                ),
-
-              ],
-            ),
+              const SizedBox(height: 30),
+              _buildSectionTitle("Recommended Cleaning Agents"),
+              const SizedBox(height: 12),
+              _buildAgentList(),
+            ],
           ),
         ),
       ),
+      bottomNavigationBar: _buildNavigationBar(),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+  }
+
+  Widget _buildSummaryCards() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildSummaryCard("Total Bookings", "12", Icons.book_online),
+        _buildSummaryCard("Pending Requests", "3", Icons.hourglass_empty),
+        _buildSummaryCard("Completed Services", "9", Icons.check_circle_outline),
+      ],
     );
   }
 
   Widget _buildSummaryCard(String title, String value, IconData icon) {
-    return SizedBox(
-      width: 120, // Adjusted for better responsiveness
+    return Expanded(
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        shadowColor: Colors.black26,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: Colors.orange, size: 24), // Smaller icon for better fit
-              const SizedBox(height: 6),
-              Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Icon(icon, color: Colors.orange, size: 28),
+              const SizedBox(height: 8),
+              Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
-              Text(title, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
         ),
@@ -112,26 +96,30 @@ class _UserDashboardState extends State<UserDashboard> {
     );
   }
 
-  Widget _buildAgentCard(CleaningAgent agent) {
+  Widget _buildCategoryList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: cleaningCategories.map((category) => _buildCategoryCard(category)).toList(),
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(CategoryItem category) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
-        width: 120, // Fixed width for square-like shape
-        height: 140, // Controls height
+        width: 120,
         child: Card(
           elevation: 6,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          shadowColor: Colors.black26,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.person, color: Colors.orange, size: 32),
+                Icon(category.icon, color: Colors.orange, size: 28),
                 const SizedBox(height: 6),
-                Text(agent.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                const SizedBox(height: 4),
-                Text("⭐ ${agent.rating}", style: const TextStyle(fontSize: 12, color: Colors.grey), textAlign: TextAlign.center),
+                Text(category.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -139,13 +127,66 @@ class _UserDashboardState extends State<UserDashboard> {
       ),
     );
   }
+
+  Widget _buildAgentList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: recommendedAgents.map((agent) => _buildAgentCard(agent)).toList(),
+      ),
+    );
+  }
+
+  Widget _buildAgentCard(CleaningAgent agent) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: SizedBox(
+        width: 140,
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                Icon(Icons.person, color: Colors.orange, size: 40),
+                const SizedBox(height: 8),
+                Text(agent.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text("⭐ ${agent.rating}", style: const TextStyle(fontSize: 14, color: Colors.grey)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationBar() {
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+      ],
+      selectedItemColor: Colors.orange,
+      unselectedItemColor: Colors.grey,
+      backgroundColor: Colors.white,
+    );
+  }
 }
 
-// Cleaning Agent Model
+// Models
 class CleaningAgent {
   final String name;
   final double rating;
   final String location;
 
   CleaningAgent({required this.name, required this.rating, required this.location});
+}
+
+class CategoryItem {
+  final String name;
+  final IconData icon;
+
+  CategoryItem({required this.name, required this.icon});
 }

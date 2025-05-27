@@ -1,6 +1,8 @@
 import 'package:clean_agent_app/screen/company_registered.dart';
 import 'package:flutter/material.dart';
 
+import '../widget/sidebar.dart';
+
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage ({super.key});
 
@@ -14,9 +16,9 @@ class AboutUsPage extends StatelessWidget {
           builder: (context) {
             return IconButton(
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+
               },
-              icon: const Icon(Icons.menu, color: Colors.black87, size: 28),
+              icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 28),
             );
           },
         ),

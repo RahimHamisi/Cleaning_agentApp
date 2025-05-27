@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildTextField("Username", usernameController, "Enter your username"),
                       _buildTextField("Password", passwordController, "Enter your password", obscureText: true),
 
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
 
                       SizedBox(
                         width: double.infinity,

@@ -30,7 +30,8 @@ class _CompanyRegisteredState extends State<CompanyRegistered> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF6B4A),
-        title: const Text("User Dashboard", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text("Company Registered", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        centerTitle: true,
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -62,64 +63,70 @@ class _CompanyRegisteredState extends State<CompanyRegistered> {
 
   Widget _buildCompanyCard(Company company, bool isMobile) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
-      child: Padding(
-        padding: EdgeInsets.all(isMobile ? 24 : 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              company.name,
-              style: TextStyle(fontSize: isMobile ? 20 : 22, fontWeight: FontWeight.bold, color: Colors.black87),
-              textAlign: TextAlign.center,
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              'assets/images/background_image.jpg', // Replace with actual image
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width * 0.2,
+              height: MediaQuery.of(context).size.height * 0.2,
             ),
-            const SizedBox(height: 16),
-            _buildInfoRow("Location:", company.location),
-            _buildInfoRow("Price:", company.price),
-            _buildInfoRow("Available Date:", company.availableDate),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          const SizedBox(width: 16),
+          // Company info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey[400]!),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                    child: Text("View Image", style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                Text(
+                  company.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.black87,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Flexible(
-                  child: ElevatedButton(
-                    onPressed: company.isAvailable ? () {} : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: company.isAvailable ? Colors.blue[600] : Colors.grey[400],
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      elevation: company.isAvailable ? 3 : 0,
-                    ),
-                    child: Text(company.isAvailable ? "Book" : "Unavailable", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  ),
+                Text(
+                  company.location,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: const [
+                    Text("Off 12%", style: TextStyle(color: Colors.grey)),
+                    SizedBox(width: 6),
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Text(" (4.7)", style: TextStyle(color: Colors.grey)),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          // Price
+          Text(
+            company.price,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
       ),
     );
   }
+
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(

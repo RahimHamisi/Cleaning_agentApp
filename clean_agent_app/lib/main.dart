@@ -23,14 +23,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       initialRoute: "/",
       routes: {
-        "/ser":(context) => const Homepage(),
+        "/home":(context) => const Homepage(),
         "/login" :(context) => const LoginScreen(),
         "/register" :(context) => const RegisterPage(),
-        "/k" : (context) => const CompanyRegistered(),
-        "/h": (context) => const UserDashboard(),
+        "/service-registered" : (context) => const CompanyRegistered(),
+        "/gfgf": (context) => const UserDashboard(),
         "/setting": (context) => const SettingsPage(),
         "/history": (context) => const BookingHistoryPage(),
 

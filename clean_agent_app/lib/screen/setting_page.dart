@@ -17,6 +17,13 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text("Settings", style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFFFF6B4A),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/home'); // Ensure '/home' is defined in routes
+          },
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView( // Fix Overflow Issue

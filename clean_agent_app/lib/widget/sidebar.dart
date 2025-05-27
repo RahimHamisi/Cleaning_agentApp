@@ -1,6 +1,7 @@
 import 'package:clean_agent_app/screen/bookinghistory.dart';
 import 'package:clean_agent_app/screen/bookservice.dart';
 import 'package:clean_agent_app/screen/company_registered.dart';
+import 'package:clean_agent_app/screen/edit_profile.dart';
 import 'package:clean_agent_app/screen/help_and_support_page.dart';
 import 'package:clean_agent_app/screen/homepage.dart';
 import 'package:clean_agent_app/screen/setting_page.dart';
@@ -28,7 +29,9 @@ class SideBar extends StatelessWidget {
             Text("Welcome, User!", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
             const SizedBox(height: 8),
             TextButton.icon(
-              onPressed: () {}, // Navigate to profile editing page
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => const EditProfilePage()));
+              }, // Navigate to profile editing page
               icon: Icon(Icons.edit, size: 16, color: Colors.orangeAccent),
               label: const Text("Edit Profile", style: TextStyle(color: Colors.orangeAccent, fontSize: 14)),
             ),
